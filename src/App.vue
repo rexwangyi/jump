@@ -29,7 +29,6 @@ nav {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  background-color: #40C4FF; /* 电光蓝 */
   padding: 0;
 }
 
@@ -40,7 +39,6 @@ nav a {
   padding: 15px 0;
   flex: 1;
   text-align: center;
-  border-right: 1px solid #40C4FF;
 }
 
 nav a:last-child {

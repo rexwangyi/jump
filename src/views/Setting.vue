@@ -28,16 +28,15 @@
 </template>
 
 <script>
+import { jsonbinConfig, getJsonbinHeaders } from '@/config/jsonbinConfig';
+
 export default {
   name: 'SettingPage',
   data() {
     return {
       userId: 'Rex',
       targetDistance: 150,
-      historyDays: 30,
-      jsonBinUrl: 'https://api.jsonbin.io/v3/b/66f14819e41b4d34e4357765',
-      jsonBinMasterKey: '$2b$10$kYQym0oNS90VerYUJSrDFeExy4xkpxBVcsXF/Gd4xtgwGbxHa/tr6',
-      jsonBinAccessKey: '$2b$10$U60gGuGLpLxxTLNWvenzTueQcqbPHbAv.fQH0/.qNMkWb1idDjrC6'
+      historyDays: 30
     }
   },
   methods: {
@@ -52,11 +51,8 @@ export default {
       const localLastUpdated = localStorage.getItem('lastUpdated') || 0
 
       try {
-        const response = await fetch(this.jsonBinUrl, {
-          headers: {
-            'X-Master-Key': this.jsonBinMasterKey,
-            'X-Access-Key': this.jsonBinAccessKey
-          }
+        const response = await fetch(jsonbinConfig.url, {
+          headers: getJsonbinHeaders()
         })
         const jsonData = await response.json()
         const serverData = jsonData.record.historyData || []
@@ -64,13 +60,9 @@ export default {
 
         if (localLastUpdated > serverLastUpdated) {
           // 本地数据较新，覆盖服务器数据
-          await fetch(this.jsonBinUrl, {
+          await fetch(jsonbinConfig.url, {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Master-Key': this.jsonBinMasterKey,
-              'X-Access-Key': this.jsonBinAccessKey
-            },
+            headers: getJsonbinHeaders(),
             body: JSON.stringify({
               historyData: localData,
               lastUpdated: localLastUpdated
